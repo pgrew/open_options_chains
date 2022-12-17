@@ -34,7 +34,7 @@ services:
         volumes:
             - ./scripts:/opt/airflow/scripts
             - ./dags:/opt/airflow/dags
-            - ./logs:/opt/airflow/logs
+#            - ./logs:/opt/airflow/logs
     webserver:
         image: apache/airflow
         entrypoint: ./scripts/webserver-entrypoint.sh
@@ -48,6 +48,6 @@ services:
         volumes:
             - ./scripts:/opt/airflow/scripts
             - ./dags:/opt/airflow/dags
-            - ./logs:/opt/airflow/logs
+#            - ./logs:/opt/airflow/logs
         ports:
             - "8088:8080"
