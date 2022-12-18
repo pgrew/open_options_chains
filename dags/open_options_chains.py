@@ -8,7 +8,7 @@ import pendulum
 
 from datetime import datetime, timedelta
 from airflow.models import DAG
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 # Use the SNP 500
@@ -270,8 +270,3 @@ def create_dag(ticker, default_args):
 # Create DAGs
 for ticker in TICKERS:
     globals()[f'get_options_data_{ticker}'] = create_dag(ticker, default_args)
-    
-
-    
-    
-
