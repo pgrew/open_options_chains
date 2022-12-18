@@ -16,8 +16,8 @@ airflow users create -u "$APP_AIRFLOW_USERNAME" -p "$APP_AIRFLOW_PASSWORD" -f Fi
 # Add connection
 airflow connections add 'postgres_optionsdata' \
     --conn-type 'postgres' \
-    --conn-login "$APP_DB_USER" \
-    --conn-password "$APP_DB_PASS" \
+    --conn-login '\"$APP_DB_USER"\' \
+    --conn-password \'"$APP_DB_PASS"\' \
     --conn-host 'postgres' \
     --conn-port '5432' \
-    --conn-schema "$APP_DB_NAME" \
+    --conn-schema \'"$APP_DB_NAME"\' \
