@@ -230,7 +230,7 @@ def create_dag(ticker, default_args):
         description=f'ETL for {ticker} options data',
         schedule_interval='*/30 8-21 * * 1-5',
         catchup=False,
-        max_active_runs=1,
+        max_active_runs=4,
         tags=['finance', 'options', ticker]
     )
 
