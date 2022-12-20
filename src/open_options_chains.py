@@ -8,7 +8,7 @@ import pendulum
 
 from datetime import datetime, timedelta
 from airflow.models import DAG
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 # Use the SNP 500
@@ -228,7 +228,7 @@ def create_dag(ticker, default_args):
         dag_id=f'get_options_data_{ticker}',
         default_args=default_args,
         description=f'ETL for {ticker} options data',
-        schedule_interval='*/30 8-21 * * 1-5',
+        schedule_interval='*/15 * * * 1-5',
         catchup=False,
         max_active_runs=1,
         tags=['finance', 'options', ticker]
@@ -240,25 +240,25 @@ def create_dag(ticker, default_args):
         task0_create_table = PythonOperator(
             task_id='create_table',
             python_callable=create_table,
-            op_kwargs={'ticker': ticker, 'weight_rule': 'upstream'}
+            op_kwargs={'ticker': ticker, 'weight_rule': 'downstream'}
         )
 
         task1_extract = PythonOperator(
             task_id='extract_options_data_from_tda',
             python_callable=extract_options_data_from_tda,
-            op_kwargs={'ticker': ticker, 'weight_rule': 'upstream'}
+            op_kwargs={'ticker': ticker, 'weight_rule': 'downstream'}
         )
 
         task2_transform = PythonOperator(
             task_id = 'transform_options_data',
             python_callable=transform_options_data,
-            op_kwargs={'weight_rule': 'upstream'}
+            op_kwargs={'weight_rule': 'downstream'}
         )
 
         task3_load = PythonOperator(
             task_id='load_data_into_postgres',
             python_callable=load_data_into_postgres,
-            op_kwargs={'ticker': ticker, 'weight_rule': 'upstream'}
+            op_kwargs={'ticker': ticker, 'weight_rule': 'downstream'}
         )
 
         # Set up dependencies
@@ -270,8 +270,3 @@ def create_dag(ticker, default_args):
 # Create DAGs
 for ticker in TICKERS:
     globals()[f'get_options_data_{ticker}'] = create_dag(ticker, default_args)
-    
-
-    
-    
-
